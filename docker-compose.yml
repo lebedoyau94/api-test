@@ -36,7 +36,23 @@ services:
         max-file: "3"
     networks:
       - api-prima
-  
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Contraseña para el usuario root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - api-prima
+    ports:
+      - "3306:3306"  # Exponer MySQL en el puerto 3306 del host
+
+volumes:
+  mysql_data:
+
 networks:
   api-prima:
     driver: bridge
