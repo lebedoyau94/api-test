@@ -1,3 +1,7 @@
 Flask
 graphene
 uwsgi
+Flask-GraphQL
+graphene-sqlalchemy
+SQLAlchemy
+pymysql
