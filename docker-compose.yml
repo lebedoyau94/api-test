@@ -1,0 +1,42 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api-prima
+    container_name: api
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: api
+      SERVICE_TAGS: dev
+    working_dir: /api
+    volumes:
+      - ./files/src:/api
+    networks:
+      - api-prima
+
+  webserver:
+    container_name: webserver
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./files/src/:/api
+      - ./files/cert/:/api/cert
+      - ./files/nginx/conf.d/api.local.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./files/nginx/logs:/var/log/nginx
+      - ./files/cert/:/etc/nginx/ssl/:ro
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - api-prima
+  
+networks:
+  api-prima:
+    driver: bridge
